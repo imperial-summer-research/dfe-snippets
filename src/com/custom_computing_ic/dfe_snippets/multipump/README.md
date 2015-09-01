@@ -5,7 +5,7 @@ This is sort of a application gallery of multi-pumping in MaxJ.
 
 Currently it has these designs:
 
-1. **DotProduct**: A simple application do x^2 * y^2 on two input streams `x` and `y`. Will multi-pump the DSP multipliers.
+1. [REMOVED]**DotProduct**: A simple application do x^2 * y^2 on two input streams `x` and `y`. Will multi-pump the DSP multipliers.
 2. **WindowSummation**: Do a summation on a window of ROM read value from input stream.
 
 Here're detailed description:
