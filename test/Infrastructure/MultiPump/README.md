@@ -24,3 +24,5 @@ This design has 2 parts:
 The first part could be multi-pumped.
 
 Here're some data for this application:
+
+![](https://raw.githubusercontent.com/imperial-summer-research/ImperialSummerReports/master/assets/images/result%20for%20window%20summation.png)
