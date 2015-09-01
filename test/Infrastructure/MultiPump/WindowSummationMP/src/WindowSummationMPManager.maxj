@@ -9,6 +9,7 @@ import com.maxeler.maxcompiler.v2.managers.BuildConfig.Effort;
 import com.maxeler.maxcompiler.v2.managers.BuildConfig.OptimizationTechnique;
 import com.maxeler.maxcompiler.v2.managers.engine_interfaces.CPUTypes;
 import com.maxeler.maxcompiler.v2.managers.engine_interfaces.EngineInterface;
+import com.maxeler.maxcompiler.v2.managers.engine_interfaces.EngineInterface.Direction;
 import com.maxeler.maxcompiler.v2.managers.engine_interfaces.InterfaceParam;
 
 class WindowSummationMPManager extends CustomManager {
@@ -39,17 +40,30 @@ class WindowSummationMPManager extends CustomManager {
         k1.getInput("value") <== k0.getOutput("value");
         r                    <== k1.getOutput("result");
 
-        createSLiCinterface(modeDefault(W, C));
+        createSLiCinterface(initInterface());
+        createSLiCinterface(computeInterface(W, C));
 
         //configBuild(params);
     }
 
-    private EngineInterface modeDefault(int W, int C) {
-        EngineInterface ei = new EngineInterface();
+    private EngineInterface initInterface() {
+        EngineInterface ei = new EngineInterface("Init");
+
+        ei.setTicks(s_gatherKernelName, 0);
+        ei.ignoreKernel(s_sumKernelName);
+        ei.ignoreStream("index");
+        ei.ignoreStream("result");
+        return ei;
+    }
+
+    private EngineInterface computeInterface(int W, int C) {
+        EngineInterface ei = new EngineInterface("Compute");
 
         InterfaceParam length = ei.addParam("length", CPUTypes.INT);
         InterfaceParam lengthInBytes = length * CPUTypes.FLOAT.sizeInBytes();
 
+        for (int i = 0; i < W/C/2; i++)
+            ei.ignoreMem(s_gatherKernelName, String.format("ROM%04d", i), Direction.IN);
         ei.setTicks(s_gatherKernelName, length / W * C);
         ei.setTicks(s_sumKernelName, length / W);
         ei.setStream("index",  CPUTypes.UINT32, lengthInBytes);
